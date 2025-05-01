@@ -9,7 +9,8 @@ scikit-learn==1.6.0
 imblearn
 xgboost
 catboost
-pymongo
+#pymongo[srv] : newer version of pymongo (4.12.0), which no longer uses the [srv] extra because the dnspython dependency is now always included by default in recent releases.
+pymongo 
 from_root
 evidently
 dill
