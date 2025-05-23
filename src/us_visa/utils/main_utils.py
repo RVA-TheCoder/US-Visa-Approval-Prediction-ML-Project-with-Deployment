@@ -24,7 +24,7 @@ def read_yaml_file(filepath:str) ->dict:
     
 
 
-def write_yaml_file(filepath: str, content: object, replace: bool = False) -> None:
+def write_yaml_file(filepath: str, content: object, replace: bool = True) -> None:
     """
     Writes content to a YAML file. Optionally prevents overwriting unless 'replace=True'.
 
@@ -38,9 +38,6 @@ def write_yaml_file(filepath: str, content: object, replace: bool = False) -> No
     """
     try:
         
-        if not replace and os.path.exists(filepath):
-            raise USvisaException(f"File '{filepath}' already exists and replace=False", sys)
-
         os.makedirs(os.path.dirname(filepath), exist_ok=True)
 
         with open(filepath, "w") as file:

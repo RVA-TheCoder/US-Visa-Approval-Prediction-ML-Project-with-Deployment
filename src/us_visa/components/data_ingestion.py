@@ -2,6 +2,7 @@ import os, sys
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
 
+from us_visa.constants import *
 from us_visa.entity.config_entity import DataIngestionConfig
 from us_visa.entity.artifact_entity import DataIngestionArtifact
 
@@ -60,7 +61,12 @@ class DataIngestion:
         
         try:
             
-            train_data, test_data = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
+            
+            train_data, test_data = train_test_split(dataframe,
+                                                     test_size=self.data_ingestion_config.train_test_split_ratio,
+                                                     stratify=dataframe[TARGET_COLUMN])
+            
+            #train_data, test_data = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
             print(f"Original Data shape : {dataframe.shape}\nTrain data shape : {train_data.shape}\nTest data shape : {test_data.shape}\n")
             
             logging.info("Performed train test split on the dataframe.")

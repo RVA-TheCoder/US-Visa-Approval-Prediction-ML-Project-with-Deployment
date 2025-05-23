@@ -31,7 +31,7 @@ MODEL_FILENAME="model.pkl"
 
 TARGET_COLUMN="case_status"
 CURRENT_YEAR=date.today().year
-PREPROCESSING_OBJECT_FILENAME="preprocessing.pkl"
+PREPROCESSING_OBJECT_FILENAME="data_preprocessor.pkl"
 SCHEMA_FILEPATH=os.path.join("config","schema.yaml")
 
 
@@ -49,6 +49,50 @@ DATA_INGESTION_TRAIN_TEST_SPLIT_RATIO=0.3
 
 
 # Data-Validation related constants
+DATA_VALIDATION_DIR_NAME:str="data_validation"
+DATA_VALIDATION_DRIFT_REPORT_DIR:str="drift_report"
+DATA_VALIDATION_COMPLETE_DRIFT_REPORT_FILENAME:str="complete_drift_report.yaml"
+DATA_VALIDATION_BRIEF_DRIFT_REPORT_FILENAME:str="brief_drift_report.yaml"
+DATA_VALIDATION_COLUMNWISE_DRIFT_REPORT_FILENAME:str="columnwise_drift_report.csv"
+DATA_VALIDATION_HTML_DRIFT_REPORT_FILENAME:str="data_drift_stats.html"
+
+
+
+# Data Transformation ralated constant 
+DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
+DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed_data"
+DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "data_transformer_object"
+
+
+
+# MODEL TRAINER related constant 
+MODEL_TRAINER_DIR_NAME: str = "model_trainer"
+MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
+MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
+MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
+MODEL_TRAINER_MODEL_CONFIG_FILEPATH: str = os.path.join("config", "model.yaml")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
