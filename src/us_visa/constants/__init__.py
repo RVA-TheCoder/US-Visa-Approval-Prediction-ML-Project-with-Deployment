@@ -1,5 +1,6 @@
 import os
 from datetime import date
+from pathlib import Path
 
 
 from urllib.parse import quote_plus
@@ -27,7 +28,8 @@ ARTIFACT_DIR="artifact"
 DATA_FILENAME="usvisa.csv"
 DATA_TRAIN_FILENAME="train.csv"
 DATA_TEST_FILENAME="test.csv"
-MODEL_FILENAME="model.pkl"
+
+MODEL_FILENAME="model.pkl"  
 
 TARGET_COLUMN="case_status"
 CURRENT_YEAR=date.today().year
@@ -35,8 +37,8 @@ PREPROCESSING_OBJECT_FILENAME="data_preprocessor.pkl"
 SCHEMA_FILEPATH=os.path.join("config","schema.yaml")
 
 
-AWS_ACCESS_KEY_ID_ENV_KEY="AWS_ACCESS_KEY_ID"
-AWS_SECRET_ACCESS_KEY_ENV_KEY="AWS_SECRET_ACCESS_KEY"
+AWS_ACCESS_KEY_ID_ENV_KEY="AWS_ACCESS_KEY_ID"            # defined inside .env file
+AWS_SECRET_ACCESS_KEY_ENV_KEY="AWS_SECRET_ACCESS_KEY"    # defined inside .env file
 REGION_NAME="us-east-1"
 
 
@@ -68,12 +70,18 @@ DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "data_transformer_object"
 # MODEL TRAINER related constant 
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
 MODEL_TRAINER_TRAINED_MODEL_DIR: str = "trained_model"
-MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
+MODEL_TRAINER_TRAINED_MODEL_NAME: str = "trained_model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODEL_TRAINER_MODEL_CONFIG_FILEPATH: str = os.path.join("config", "model.yaml")
 
 
 
+# MODEL EVALUATION related constant 
+MODEL_EVALUATION_CHANGED_THRESHOLD_SCORE: float = 0.02   # i.e., 2% change
+MODEL_BUCKET_NAME = "usvisa-mlproj-s3"      # AWS S3 bucket name
+MODEL_PUSHER_S3_KEY = "production_model_registry"      # inside this folder our trained production model will be saved.
+S3_PRODUCTION_MODEL_NAME="production_model.pkl"
+LOCAL_PRODUCTION_MODEL_DIR=Path("ProductionModel")
 
 
 
