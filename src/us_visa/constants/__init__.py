@@ -33,7 +33,7 @@ MODEL_FILENAME="model.pkl"
 
 TARGET_COLUMN="case_status"
 CURRENT_YEAR=date.today().year
-PREPROCESSING_OBJECT_FILENAME="data_preprocessor.pkl"
+
 SCHEMA_FILEPATH=os.path.join("config","schema.yaml")
 
 
@@ -64,8 +64,7 @@ DATA_VALIDATION_HTML_DRIFT_REPORT_FILENAME:str="data_drift_stats.html"
 DATA_TRANSFORMATION_DIR_NAME: str = "data_transformation"
 DATA_TRANSFORMATION_TRANSFORMED_DATA_DIR: str = "transformed_data"
 DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "data_transformer_object"
-
-
+DATA_TRANSFORMATION_OBJECT_FILENAME="data_preprocessor.pkl"
 
 # MODEL TRAINER related constant 
 MODEL_TRAINER_DIR_NAME: str = "model_trainer"
@@ -85,7 +84,9 @@ LOCAL_PRODUCTION_MODEL_DIR=Path("ProductionModel")
 
 
 
-
+# REST API 
+APP_HOST = "0.0.0.0"
+APP_PORT = 8080
 
 
 

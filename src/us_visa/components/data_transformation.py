@@ -1,4 +1,6 @@
-import sys
+import sys,os
+from pathlib import Path
+import pickle
 
 import numpy as np
 import pandas as pd
@@ -8,7 +10,7 @@ from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler, OneHotEncoder, OrdinalEncoder, PowerTransformer
 from sklearn.compose import ColumnTransformer
 
-from us_visa.constants import TARGET_COLUMN, SCHEMA_FILEPATH, CURRENT_YEAR
+from us_visa.constants import *
 from us_visa.entity.config_entity import DataTransformationConfig
 from us_visa.entity.artifact_entity import DataTransformationArtifact, DataIngestionArtifact, DataValidationArtifact
 
@@ -225,6 +227,17 @@ class DataTransformation:
                     transformed_train_filepath=self.data_transformation_config.transformed_train_filepath,
                     transformed_test_filepath=self.data_transformation_config.transformed_test_filepath
                 )
+                
+                # Saving the data Preprocessor object for prediction pipeline
+                data_preprocessor_object_filepath = os.path.join(DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
+                                                                 DATA_TRANSFORMATION_OBJECT_FILENAME)
+                
+                os.makedirs(Path(os.path.dirname(data_preprocessor_object_filepath)), exist_ok=True)
+                with open(Path(data_preprocessor_object_filepath), "wb") as data_preprocessor_handle:
+                    pickle.dump(obj=preprocessor, file=data_preprocessor_handle)
+                    
+                print(f"Data Preprocessor successfully saved to {data_preprocessor_object_filepath}")
+                    
                 
                 return data_transformation_artifact
             

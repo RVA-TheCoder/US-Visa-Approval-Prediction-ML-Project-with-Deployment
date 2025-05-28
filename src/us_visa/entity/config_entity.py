@@ -2,6 +2,7 @@ import os
 from us_visa.constants import *
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 
 TIMESTAMP=datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 
@@ -87,7 +88,7 @@ class DataTransformationConfig:
     
     transformed_object_filepath: str = os.path.join(data_transformation_dir,
                                                      DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
-                                                     PREPROCESSING_OBJECT_FILENAME)
+                                                     DATA_TRANSFORMATION_OBJECT_FILENAME)
 
 
 
@@ -114,7 +115,18 @@ class ModelPusherConfig:
     s3_model_key_path: str = MODEL_FILENAME  # I think we need to change this
 
 
-
+@dataclass
+class USvisaPredictorConfig:
+    #pred_model_filepath: str = f"{MODEL_PUSHER_S3_KEY}/{S3_PRODUCTION_MODEL_NAME}"
+    #model_bucket_name: str = MODEL_BUCKET_NAME
+    #DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR: str = "data_transformer_object"
+    #DATA_TRANSFORMATION_OBJECT_FILENAME="data_preprocessor.pkl"
+    data_preprocessor_filepath_local : Path = Path(os.path.join(DATA_TRANSFORMATION_TRANSFORMED_OBJECT_DIR,
+                                                                DATA_TRANSFORMATION_OBJECT_FILENAME))
+    
+    pred_model_filepath_local : Path = Path(os.path.join(LOCAL_PRODUCTION_MODEL_DIR,
+                                                         S3_PRODUCTION_MODEL_NAME))
+    
 
 
 
