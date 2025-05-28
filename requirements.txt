@@ -1,5 +1,5 @@
 ipykernel
-quote_plus
+#quote_plus
 python-dotenv
 pandas
 numpy
