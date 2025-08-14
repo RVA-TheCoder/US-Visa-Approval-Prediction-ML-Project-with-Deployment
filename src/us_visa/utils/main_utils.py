@@ -8,9 +8,34 @@ from us_visa.logger import logging
 
 
 
+"""
+Utility functions for the US Visa Approval Prediction project.
+
+This module provides reusable helper functions for:
+    - Reading and writing YAML files
+    - Saving and loading serialized Python objects
+    - Handling NumPy array persistence
+    - Performing common DataFrame transformations
+
+These utilities help avoid code duplication and ensure consistency across the pipeline.
+"""
+
 
 
 def read_yaml_file(filepath:str) ->dict:
+    
+    """
+    Read and parse a YAML file.
+
+    Parameters : 
+        (a) filepath (str): Path to the YAML file.
+
+    Returns:
+        dict: Parsed YAML content as a Python dictionary.
+
+    Raises:
+        USvisaException: If the file cannot be read or parsed.
+    """
     
     try :
         
@@ -25,13 +50,14 @@ def read_yaml_file(filepath:str) ->dict:
 
 
 def write_yaml_file(filepath: str, content: object, replace: bool = True) -> None:
+    
     """
     Writes content to a YAML file. Optionally prevents overwriting unless 'replace=True'.
 
     Parameters:
-        filepath (str): Path to the YAML file.
-        content (object): Python object to serialize as YAML.
-        replace (bool): If False and file exists, raises an error. Default is False.
+        (a) filepath (str): Path to the YAML file.
+        (b) content (object): Python object to serialize as YAML.
+        (c) replace (bool, optional): Whether to overwrite the file if it exists. Defaults to True.
 
     Raises:
         USvisaException: If any error occurs during file operation.
@@ -50,14 +76,15 @@ def write_yaml_file(filepath: str, content: object, replace: bool = True) -> Non
     
 def save_object(filepath:str, obj:object) -> None :
     
-    
     """
-        Serializes and saves the given object to a file.
+    Serialize and save a Python object to disk using dill.
 
-        Parameters:
-            filepath (str): The path where the object will be saved.
-            obj (object): The object to be saved.
-            
+    Parameters : 
+        (a) filepath (str): Path where the object will be saved.
+        (b) obj (object): Python object to serialize.
+
+    Raises:
+        USvisaException: If saving fails.
     """
     
     logging.info("Entered the save_object method of utils/main_utils.py")
@@ -83,14 +110,18 @@ def save_object(filepath:str, obj:object) -> None :
 
 def load_object(filepath:str) -> object:
     
-    '''
-    This function loads a Python object (typically a model or serialized data) from a file
-    using the dill library.
-    
-    It's similar to how we'd use 'pickle', but 'dill' is more powerful and can serialize more
-    complex Python objects.
-    
-    '''
+    """
+    Load a serialized Python object from disk using dill.
+
+    Parameters :
+        (a) filepath (str): Path to the file containing the serialized object.
+
+    Returns:
+        object: Deserialized Python object.
+
+    Raises:
+        USvisaException: If loading fails.
+    """
     
     logging.info("Entered the load_object method of utils/main_utils.py") 
     
@@ -111,16 +142,18 @@ def load_object(filepath:str) -> object:
         raise USvisaException(e, sys) from e
 
 
+
 def save_numpy_array_data(filepath:str, array:np.ndarray):
     
     """
-    This method saves numpy array data to a file.
-    
-    parameters :
-    
-       (a) filepath : str filepath to which the data is saved.
-       (b) array : np.array data to save in above file
-       
+    Save a NumPy array to disk in .npy format.
+
+    Parameters : 
+        (a) filepath (str): Destination file path.
+        (b) array (np.ndarray): NumPy array to save.
+
+    Raises:
+        USvisaException: If saving fails.
     """
     
     try:
@@ -144,14 +177,16 @@ def save_numpy_array_data(filepath:str, array:np.ndarray):
 def load_numpy_array_data(filepath:str) -> np.ndarray:
     
     """
-    This method loads a NumPy array from a .npy file.
+    Load a NumPy array from a .npy file.
 
-    Parameters:
-        filepath (str): Path to the .npy file from which data is loaded.
+    Parameters : 
+        (a) filepath (str): Path to the .npy file.
 
     Returns:
         np.ndarray: Loaded NumPy array.
-    
+
+    Raises:
+        USvisaException: If loading fails or file does not exist.
     """
     
     try :
@@ -172,12 +207,16 @@ def drop_columns(df: DataFrame, cols: list) -> DataFrame:
     """
     Drop specified columns from a pandas DataFrame.
 
-    Parameters:
-        df (pd.DataFrame): The DataFrame from which columns will be dropped.
-        cols (list): List of column names to be dropped.
+    Parameters :
+        (a) df (DataFrame): Input DataFrame.
+        (b) cols (list): List of column names to drop.
 
     Returns:
-        pd.DataFrame: A new DataFrame with the specified columns dropped.
+        DataFrame: New DataFrame without the specified columns.
+
+    Raises:
+        ValueError: If any specified column is not found in the DataFrame.
+        USvisaException: If the operation fails.
     """
     
     logging.info("Entered drop_columns method for dropping columns from a DataFrame of utils/main_utils.py")
@@ -197,9 +236,6 @@ def drop_columns(df: DataFrame, cols: list) -> DataFrame:
     
     except Exception as e:
         raise USvisaException(e, sys) from e    
-
-
-
 
 
 

@@ -11,9 +11,30 @@ from us_visa.logger import logging
 from us_visa.data_access.usvisa_data import USvisaData
 
 
+
+
 class DataIngestion:
     
+    """
+    Handles the process of fetching raw data from the source (MongoDB),
+    saving it locally in a feature store, and splitting it into training and testing sets.
+
+    Attributes:
+        data_ingestion_config (DataIngestionConfig): Configuration object containing paths, split ratio, and 
+                                                     collection details.
+                    
+    """
+    
     def __init__(self, data_ingestion_config:DataIngestionConfig=DataIngestionConfig()):
+        
+        """
+        Initializes the DataIngestion component with the given configuration.
+
+        Parameters : 
+            (a) data_ingestion_config (DataIngestionConfig, optional): Config object
+                                        that specifies feature store path, train/test file paths, and
+                                        MongoDB collection name.
+        """
         
         try:
             self.data_ingestion_config=data_ingestion_config
@@ -23,11 +44,19 @@ class DataIngestion:
             raise USvisaException(e, sys) from e
         
     
+    
     def export_data_into_feature_store(self)->DataFrame:
         
         """
-        This method exports data from mongodb server to csv file in our local system
+        Fetches data from MongoDB and saves it into the local feature store path.
+
+        Returns:
+            DataFrame: Pandas DataFrame containing the raw dataset.
+
+        Raises:
+            USvisaException: If there is an error during the export process.
         """
+        
         try:
             
             logging.info(f"Exporting data from mongodb")
@@ -41,7 +70,7 @@ class DataIngestion:
             dir_path=os.path.dirname(feature_store_filepath)
             os.makedirs(dir_path, exist_ok=True)
             
-            logging.info(f"Saving exported data into feature store filepath : {feature_store_filepath}")
+            logging.info(f"Saving exported (fetched) data into feature store filepath : {feature_store_filepath}")
             
             dataframe.to_csv(feature_store_filepath, index=False, header=True)
             
@@ -49,24 +78,30 @@ class DataIngestion:
         
         except Exception as e:
             raise USvisaException(e, sys) from e
+      
         
         
     def split_data_as_train_test(self, dataframe:DataFrame)->None:
         
         """
-        This method split the data into train and test data based on the train-test split ratio provided.
-        
-        """ 
+        Splits the dataset into training and testing sets, and saves them locally.
+
+        Parameters : 
+            (a) dataframe (DataFrame): The dataset to be split.
+
+        Raises:
+            USvisaException: If there is an error during train-test splitting.
+        """
+         
         logging.info("Entered split_data_as_train_test method of DataIngestion class inside src/us_visa/components/data_ingestion.py")
         
         try:
-            
-            
+             
             train_data, test_data = train_test_split(dataframe,
                                                      test_size=self.data_ingestion_config.train_test_split_ratio,
-                                                     stratify=dataframe[TARGET_COLUMN])
+                                                     stratify=dataframe[TARGET_COLUMN]
+                                                     )
             
-            #train_data, test_data = train_test_split(dataframe, test_size=self.data_ingestion_config.train_test_split_ratio)
             print(f"Original Data shape : {dataframe.shape}\nTrain data shape : {train_data.shape}\nTest data shape : {test_data.shape}\n")
             
             logging.info("Performed train test split on the dataframe.")
@@ -85,30 +120,43 @@ class DataIngestion:
         except Exception as e:
             raise USvisaException(e, sys) from e
         
+    
         
     def initiate_data_ingestion(self)->DataIngestionArtifact:
         
         """
-        This method initiates the data ingestion components of training pipeline.
+        Executes the complete data ingestion process:
+            1. Fetch data from MongoDB.
+            2. Save raw data into the feature store.
+            3. Perform train-test split.
+            4. Save train and test datasets.
+
+        Returns:
+            DataIngestionArtifact: Contains paths to the saved train and test datasets.
+
+        Raises:
+            USvisaException: If any step in the data ingestion process fails.
         """
+        
         logging.info("Entered initiate_data_ingestion method of DataIngestion class inside src/us_visa/components/data_ingestion.py")
         
         try:
+            
+            # Step 1: Fetch raw data
             dataframe=self.export_data_into_feature_store()
             logging.info("Got the data from MongoDB server.")
             
+            # Step 2: Perform train-test split
             self.split_data_as_train_test(dataframe)
-
-            logging.info("Performed train-test split on the dataset.")
+            logging.info("Train-test split completed.")
             
-            logging.info("Exited initiate_data_ingestion method of DataIngestion class inside src/us_visa/components/data_ingestion.py")
-
-            data_ingestion_artifact=DataIngestionArtifact(trained_filepath=self.data_ingestion_config.training_filepath,
-                                                          test_filepath=self.data_ingestion_config.testing_filepath
+            # Step 3: Prepare artifact
+            data_ingestion_artifact=DataIngestionArtifact(trained_data_filepath=self.data_ingestion_config.training_filepath,
+                                                          test_data_filepath=self.data_ingestion_config.testing_filepath
                                                           )
             
-            
             logging.info(f"Data Ingestion Artifact : {data_ingestion_artifact}")
+            logging.info("Exited initiate_data_ingestion method of DataIngestion class inside src/us_visa/components/data_ingestion.py")
             
             return data_ingestion_artifact
         
@@ -118,15 +166,6 @@ class DataIngestion:
         
     
       
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     
     

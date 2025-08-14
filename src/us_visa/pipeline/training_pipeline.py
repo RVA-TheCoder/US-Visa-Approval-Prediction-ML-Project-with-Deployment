@@ -28,9 +28,28 @@ from us_visa.components.model_evaluation import ModelEvaluation
 from us_visa.components.model_pusher import ModelPusher
 
 
+
+
+
 class TrainPipeline:
     
+    """
+    Orchestrates the entire ML training pipeline for the US Visa prediction project.
+    
+    This pipeline consists of:
+        1. Data ingestion from MongoDB or another source.
+        2. Data validation to ensure schema and quality checks.
+        3. Data transformation (feature engineering, encoding, scaling, etc.).
+        4. Model training with specified algorithms and hyperparameters.
+        5. Model evaluation to compare with existing production models.
+        6. Model pushing to AWS S3 and saving locally if the new model is better.
+    
+    Each stage consumes an Artifact from the previous stage and outputs its own Artifact.
+    """
+    
     def __init__(self):
+        
+        # Initialize configuration objects for each pipeline stage
         
         self.data_ingestion_config = DataIngestionConfig()
         self.data_validation_config = DataValidationConfig()
@@ -41,6 +60,11 @@ class TrainPipeline:
         
         
     def start_data_ingestion(self)->DataIngestionArtifact:
+        
+        """
+        Runs the Data Ingestion component which retrieves the dataset,
+        splits into training/testing sets, and stores them locally.
+        """
         
         try:
             logging.info("Entered the start_data_ingestion method TrainPipeline class inside src/us_visa/pipline/training_pipeline.py")
@@ -62,8 +86,9 @@ class TrainPipeline:
     def start_data_validation(self, data_ingestion_artifact: DataIngestionArtifact) -> DataValidationArtifact:
         
         """
-        This method starts the data validation pipeline step.
+        Validates ingested data to ensure schema correctness and quality checks.
         """
+        
         logging.info("Entered the start_data_validation method of TrainPipeline class inside src/us_visa/pipline/training_pipeline.py")
 
         try:
@@ -91,8 +116,9 @@ class TrainPipeline:
                                   data_validation_artifact: DataValidationArtifact
                                   ) -> DataTransformationArtifact:
         """
-        This method of TrainPipeline class is responsible for starting data transformation component
+        Transforms validated data into a processed format ready for model training.
         """
+        
         try:
             data_transformation = DataTransformation(data_ingestion_artifact=data_ingestion_artifact,
                                                      data_validation_artifact=data_validation_artifact,
@@ -108,9 +134,11 @@ class TrainPipeline:
     
     
     def start_model_trainer(self, data_transformation_artifact: DataTransformationArtifact) -> ModelTrainerArtifact:
+       
         """
-        This method of TrainPipeline class is responsible for starting model training
+        Trains a machine learning model using transformed data.
         """
+        
         try:
             model_trainer = ModelTrainer(data_transformation_artifact=data_transformation_artifact,
                                          model_trainer_config=self.model_trainer_config
@@ -129,9 +157,8 @@ class TrainPipeline:
                                
                                ) -> ModelEvaluationArtifact:
         """
-        This method of TrainPipeline class is responsible for starting modle evaluation
+        Compares the newly trained model with the existing production model.
         """
-        
         try:
             model_evaluation = ModelEvaluation(data_ingestion_artifact=data_ingestion_artifact,
                                                data_transformation_artifact=data_transformation_artifact,
@@ -151,13 +178,14 @@ class TrainPipeline:
     def start_model_pusher(self, model_evaluation_artifact: ModelEvaluationArtifact) -> ModelPusherArtifact:
         
         """
-        This method of TrainPipeline class is responsible for starting model pushing
-        
+        Pushes the model to AWS S3 and/or saves locally for production use.
         """
         try:
+            
             model_pusher = ModelPusher(model_evaluation_artifact=model_evaluation_artifact,
                                        model_pusher_config=self.model_pusher_config
                                        )
+            
             model_pusher_artifact = model_pusher.initiate_model_pusher()
             
             return model_pusher_artifact
@@ -169,28 +197,31 @@ class TrainPipeline:
     def run_pipeline(self) -> None:
         
         """
-        Runs the complete pipeline.
+        Executes all stages of the ML pipeline sequentially.
         """
-        
         try :
+            # Step 1: Data ingestion
             data_ingestion_artifact=self.start_data_ingestion()
+            # Step 2: Data validation
             data_validation_artifact=self.start_data_validation(data_ingestion_artifact=data_ingestion_artifact)
+            # Step 3: Data transformation
             data_transformation_artifact=self.start_data_transformation(
                                                         data_ingestion_artifact=data_ingestion_artifact,
                                                         data_validation_artifact=data_validation_artifact
                                                         )
+            # Step 4: Model training
             model_trainer_artifact = self.start_model_trainer(data_transformation_artifact=data_transformation_artifact)
-            
+            # Step 5: Model evaluation
             model_evaluation_artifact = self.start_model_evaluation(data_ingestion_artifact=data_ingestion_artifact,
                                                                     data_transformation_artifact=data_transformation_artifact,
                                                                     model_trainer_artifact=model_trainer_artifact)
             
-            
+            # Step 6: Model pushing if improved
             if not model_evaluation_artifact.is_trained_model_accepted:
                 
                 print("Trained model is not better than the AWS S3 model.")
                 print("Therefore, No need to push the Trained model to AWS S3 bucket for production use.")
-                logging.info("Trained model is not better than the AWS S3 model.")
+                logging.info("Trained model is not better than the AWS S3 model. Skipping push.")
                   
             else:
                 
@@ -211,7 +242,7 @@ class TrainPipeline:
                 print(f"Saved the current trained model as Production model to {LOCAL_PRODUCTION_MODEL_DIR}/{S3_PRODUCTION_MODEL_NAME}")
                 
     
-            logging.info("Exited the run_pipline method of TrainPipeline class in src/us_visa/pipline/training_pipeline.py")
+            logging.info("Pipeline execution completed successfully.\nExited the run_pipline method of TrainPipeline class in src/us_visa/pipline/training_pipeline.py")
 
         
         except Exception as e:

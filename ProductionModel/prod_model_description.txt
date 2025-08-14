@@ -1,0 +1,42 @@
+
+Description:
+This module defines the model-related classes used in the US Visa Approval Prediction pipeline. 
+
+It contains:
+
+    (1) TargetValueMapping –
+        A utility class for encoding the categorical target variable (case_status) into numerical labels 
+        for model training and decoding predictions back into human-readable labels.
+
+            "Certified" → 1 (positive class)
+            "Denied" → 0 (negative class)
+
+    (2) USvisaModel –
+        A wrapper class around scikit-learn’s GradientBoostingClassifier with pre-configured or 
+        user-specified hyperparameters. This class is responsible for:
+
+            (i) Storing model configuration (n_estimators, max_depth, learning_rate).
+
+            (ii) Providing a method (create_model_object) to initialize the classifier object for 
+                 training or inference.
+
+            (iii) Ensuring consistent model creation across the project based on best-performing 
+                  experimental settings.
+
+Model Details:
+
+    (i) Algorithm: Gradient Boosting Classifier
+
+    (ii) Purpose: Predict the likelihood of US visa approval based on applicant and employer features.
+
+    (iii) Advantages:
+
+            - Handles both categorical and numerical features after preprocessing.
+            - Works well with imbalanced datasets.
+            - Captures non-linear relationships between features.
+
+    (iv) Default Hyperparameters:
+
+            - n_estimators = 300
+            - max_depth = 5
+            - learning_rate = 0.01

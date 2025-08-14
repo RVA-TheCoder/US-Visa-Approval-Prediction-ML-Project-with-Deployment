@@ -18,7 +18,13 @@ from us_visa.logger import logging
 
 class USvisaData:
     
-    # Usvisa Data constructor : Input -> all features of the trained model for prediction
+    """
+    Data container for US Visa prediction inputs.
+
+    Accepts all the features required by the trained model for prediction
+    and provides helper methods to convert them into dict or DataFrame formats.
+    """
+    
     def __init__(self,
                 continent,
                 education_of_employee,
@@ -32,7 +38,24 @@ class USvisaData:
                 yr_of_estab
                 ):
         
+        """
+        Initialize prediction input data.
+
+        Parameters : 
+            (a) continent: Continent of employment.
+            (b) education_of_employee: Highest education level of the employee.
+            (c) has_job_experience: 'Y' or 'N' indicating job experience.
+            (d) requires_job_training: 'Y' or 'N' indicating if job training is required.
+            (e) no_of_employees: Number of employees in the company.
+            (f) region_of_employment: Region of employment within the continent.
+            (g) prevailing_wage: Prevailing wage offered for the position.
+            (h) unit_of_wage: Unit for wage (Year, Month, Week, Hour).
+            (i) full_time_position: 'Y' or 'N' indicating if the position is full-time.
+            (j) yr_of_estab: Year company was established.
+        """
+        
         try:
+            # Store all provided feature values
             self.yr_of_estab = yr_of_estab
             self.prevailing_wage = prevailing_wage
             self.no_of_employees = no_of_employees
@@ -52,7 +75,9 @@ class USvisaData:
     def get_usvisa_data_as_dict(self):
         
         """
-        This function returns a dictionary from USvisaData class input 
+        Returns:
+            Dictionary containing model input features, each wrapped in a list
+            (to match DataFrame row format for prediction).
         """
         
         logging.info("Entered get_usvisa_data_as_dict method as USvisaData class inside src/us_visa/pipline/prediction_pipeline.py file")
@@ -86,7 +111,8 @@ class USvisaData:
     def get_usvisa_input_data_frame(self)-> DataFrame:
         
         """
-        This function returns a DataFrame from USvisaData class input
+        Returns:
+            Pandas DataFrame containing one row of model input features.
         """
         try:
             
@@ -99,11 +125,19 @@ class USvisaData:
 
 class USvisaClassifier:
     
+    """
+    Class responsible for loading the preprocessing pipeline and trained model,
+    and making predictions.
+    """
+    
     def __init__(self,
-                 prediction_pipeline_config: USvisaPredictorConfig = USvisaPredictorConfig(),) -> None:
+                 prediction_pipeline_config: USvisaPredictorConfig = USvisaPredictorConfig()
+                 ) -> None:
         
         """
-        :param prediction_pipeline_config: Configuration for prediction the value
+        Parameters : 
+            (a) prediction_pipeline_config: Configuration object containing file paths
+                                            for the preprocessor and prediction model.
         """
         
         try:
@@ -117,21 +151,28 @@ class USvisaClassifier:
     def get_data_preprocessor_n_pred_model(self):
         
         """
-        This method returns the data preprocessor object and trained model object.
+        Loads:
+            - Data preprocessor object (for transforming raw features).
+            - Trained prediction model.
+
+        Returns:
+            Tuple (data_preprocessor, prediction_model)
         """
+        
         logging.info("Entered get_pred_model_n_data_preprocessor method of USvisaClassifier class inside src/us_visa/pipline/prediction_pipeline.py file")
 
         data_preprocessor_path_local = self.prediction_pipeline_config.data_preprocessor_filepath_local
         pred_model_path_local = self.prediction_pipeline_config.pred_model_filepath_local
         
+        # Load preprocessing pipeline
         with open(data_preprocessor_path_local, "rb") as data_preprocessor_handle:
             data_preprocessor = pickle.load(data_preprocessor_handle)
         
-        
+        # Load trained model
         with open(pred_model_path_local, mode="rb") as pred_model_handle:
             prediction_model = pickle.load(pred_model_handle)
             
-        logging.info("Exited get_pred_model_n_data_preprocessor method of USvisaClassifier class inside src/us_visa/pipline/prediction_pipeline.py file")
+        logging.info("Successfully loaded preprocessor and prediction model.\nExited get_pred_model_n_data_preprocessor method of USvisaClassifier class inside src/us_visa/pipline/prediction_pipeline.py file")
             
         return data_preprocessor, prediction_model
         
@@ -139,25 +180,28 @@ class USvisaClassifier:
     def predict(self, dataframe) -> str:
         
         """
-        This is the method of USvisaClassifier
-        Returns: Prediction in string format
+        Runs prediction on the provided DataFrame.
+
+        Parameters : 
+            (a) dataframe: Input data for prediction (must match model features after preprocessing).
+
+        Returns:
+            Numpy array containing predictions.
         """
         
         try:
             logging.info("Entered predict method of USvisaClassifier class inside src/us_visa/pipline/prediction_pipeline.py file")
-            #model = USvisaEstimator(
-            #    bucket_name=self.prediction_pipeline_config.model_bucket_name,
-            #    model_path=self.prediction_pipeline_config.model_filepath,
-            #)
             
+            # Load the preprocessor and model
             data_preprocessor, prediction_model = self.get_data_preprocessor_n_pred_model()
             
+            # Transform input data
             X_prod = data_preprocessor.transform(dataframe)
             print("X_prod : ", X_prod)
             
+            # Make prediction
             result = prediction_model.predict(X_prod)
             print("Production data prediction : ", result)
-            #result =  model.predict(dataframe)
             
             return result
         

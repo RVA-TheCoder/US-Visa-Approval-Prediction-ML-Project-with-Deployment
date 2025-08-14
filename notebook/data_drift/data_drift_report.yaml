@@ -1,0 +1,319 @@
+metrics:
+- id: 15e89f895b482f9b84ba7274ed18a106
+  metric_id: DriftedColumnsCount(drift_share=0.5)
+  value:
+    count: 0.0
+    share: 0.0
+- id: 44ed95692690fdd0122a65b138e9060b
+  metric_id: ValueDrift(column=no_of_employees)
+  value: 0.008018277294367132
+- id: a1076b7f552ed954d7a0f7b5e3389aed
+  metric_id: ValueDrift(column=yr_of_estab)
+  value: 0.010770938240899034
+- id: 3f76acd90ddbe278fb63f5ef3169f600
+  metric_id: ValueDrift(column=prevailing_wage)
+  value: 0.00943771849449775
+- id: 331f8786a2cc5d42160cb3239d26369e
+  metric_id: ValueDrift(column=continent)
+  value: 0.008831991215659545
+- id: 462f7e3097be07eeb3f21ae6d3142f81
+  metric_id: ValueDrift(column=education_of_employee)
+  value: 0.007414197816680817
+- id: 7f345702abe4aaa71a56794154694dd5
+  metric_id: ValueDrift(column=has_job_experience)
+  value: 0.0020626950492821554
+- id: cfd219a499d8abe9685c9fea4f9d0abe
+  metric_id: ValueDrift(column=requires_job_training)
+  value: 0.0034128771011835268
+- id: fbfc3391582473821b92c93e972d3db4
+  metric_id: ValueDrift(column=region_of_employment)
+  value: 0.008846901325804808
+- id: c29a272390c6fe63a2b4e6762abe77d5
+  metric_id: ValueDrift(column=unit_of_wage)
+  value: 0.007802289127820481
+- id: b0351fb71ee2c17e6fdfa607c6445647
+  metric_id: ValueDrift(column=full_time_position)
+  value: 0.002599483452035596
+- id: 4a0f71cb37dc97fef945236f625bfaa8
+  metric_id: ValueDrift(column=case_status)
+  value: 0.0009261261379759516
+- id: 32e9fb9a329ebaf6ac32bf41519d712f
+  metric_id: ValueDrift(column=case_id)
+  value: 0.5
+tests:
+- bound_test:
+    is_count: false
+    metric_fingerprint: 15e89f895b482f9b84ba7274ed18a106
+    test:
+      is_critical: true
+      threshold: 0.5
+      type: evidently:test_v2:LessThanMetricTest
+    type: evidently:bound_test:CountBoundTest
+  description: 'Share of Drifted Columns: Actual value 0.000 < 0.500'
+  id: lt
+  metric_config:
+    metric_id: 15e89f895b482f9b84ba7274ed18a106
+    params:
+      cat_method: null
+      cat_threshold: null
+      columns: null
+      drift_share: 0.5
+      embeddings: null
+      embeddings_drift_method: null
+      method: null
+      num_method: null
+      num_threshold: null
+      per_column_method: null
+      per_column_threshold: null
+      share_tests: null
+      tests: null
+      text_method: null
+      text_threshold: null
+      threshold: null
+      type: evidently:metric_v2:DriftedColumnsCount
+  name: 'Share of Drifted Columns: Less 0.500'
+  status: SUCCESS
+  test_config:
+    is_critical: true
+    threshold: 0.5
+    type: evidently:test_v2:LessThanMetricTest
+- bound_test:
+    metric_fingerprint: 44ed95692690fdd0122a65b138e9060b
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Wasserstein distance
+    (normed). The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 44ed95692690fdd0122a65b138e9060b
+    params:
+      column: no_of_employees
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column no_of_employees
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: a1076b7f552ed954d7a0f7b5e3389aed
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Wasserstein distance
+    (normed). The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: a1076b7f552ed954d7a0f7b5e3389aed
+    params:
+      column: yr_of_estab
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column yr_of_estab
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 3f76acd90ddbe278fb63f5ef3169f600
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Wasserstein distance
+    (normed). The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 3f76acd90ddbe278fb63f5ef3169f600
+    params:
+      column: prevailing_wage
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column prevailing_wage
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 331f8786a2cc5d42160cb3239d26369e
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 331f8786a2cc5d42160cb3239d26369e
+    params:
+      column: continent
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column continent
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 462f7e3097be07eeb3f21ae6d3142f81
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 462f7e3097be07eeb3f21ae6d3142f81
+    params:
+      column: education_of_employee
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column education_of_employee
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 7f345702abe4aaa71a56794154694dd5
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.00. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 7f345702abe4aaa71a56794154694dd5
+    params:
+      column: has_job_experience
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column has_job_experience
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: cfd219a499d8abe9685c9fea4f9d0abe
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.00. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: cfd219a499d8abe9685c9fea4f9d0abe
+    params:
+      column: requires_job_training
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column requires_job_training
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: fbfc3391582473821b92c93e972d3db4
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: fbfc3391582473821b92c93e972d3db4
+    params:
+      column: region_of_employment
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column region_of_employment
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: c29a272390c6fe63a2b4e6762abe77d5
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.01. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: c29a272390c6fe63a2b4e6762abe77d5
+    params:
+      column: unit_of_wage
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column unit_of_wage
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: b0351fb71ee2c17e6fdfa607c6445647
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.00. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: b0351fb71ee2c17e6fdfa607c6445647
+    params:
+      column: full_time_position
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column full_time_position
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 4a0f71cb37dc97fef945236f625bfaa8
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.00. The drift detection method is Jensen-Shannon distance.
+    The drift threshold is 0.10.
+  id: drift
+  metric_config:
+    metric_id: 4a0f71cb37dc97fef945236f625bfaa8
+    params:
+      column: case_status
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column case_status
+  status: SUCCESS
+  test_config: {}
+- bound_test:
+    metric_fingerprint: 32e9fb9a329ebaf6ac32bf41519d712f
+    test:
+      is_critical: true
+      type: evidently:test_v2:ValueDriftTest
+    type: evidently:bound_test:ValueDriftBoundTest
+  description: Drift score is 0.50. The drift detection method is Absolute text content
+    drift. The drift threshold is 0.55.
+  id: drift
+  metric_config:
+    metric_id: 32e9fb9a329ebaf6ac32bf41519d712f
+    params:
+      column: case_id
+      method: null
+      tests: null
+      threshold: null
+      type: evidently:metric_v2:ValueDrift
+  name: Value Drift for column case_id
+  status: SUCCESS
+  test_config: {}

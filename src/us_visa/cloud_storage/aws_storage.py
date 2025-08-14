@@ -1,4 +1,3 @@
-
 from io import StringIO
 from typing import Union,List
 import os,sys
@@ -16,10 +15,31 @@ from us_visa.configuration.aws_connection import S3Client
 from botocore.exceptions import ClientError
 
 
-# Creating Aws S3 utility methods using below class
+
+"""
+AWS S3 Utility Module
+
+Provides a wrapper class for AWS S3 operations such as:
+    - Uploading/downloading files
+    - Checking file/folder existence
+    - Creating folders
+    - Loading production ML models from S3
+
+This is used throughout the project for seamless cloud storage integration.
+"""
+
+
+
+
+
+# Creating AWS S3 utility methods using below class
 class SimpleStorageService:
+    
+    """Wrapper class for AWS S3 operations."""
 
     def __init__(self):
+        
+        """Initialize AWS S3 client and resource."""
         
         # local variable that exists only inside the __init__ method.
         s3_client = S3Client()
@@ -28,17 +48,22 @@ class SimpleStorageService:
         self.s3_client = s3_client.s3_client
     
         
-    # Done    
+  
     def get_bucket(self, bucket_name: str) -> Bucket:
         
         """
-        Method Name :   get_bucket
-        Description :   This method gets the bucket object based on the bucket_name
+        Retrieve a boto3 Bucket object.
 
-        Output      :   Bucket object is returned based on the bucket name
-        On Failure  :   Write an exception log and then raise an exception
+        Parameters : 
+            (a) bucket_name (str): The name of the S3 bucket.
 
+        Returns:
+            Bucket: The boto3 Bucket instance.
+
+        Raises:
+            USvisaException: If retrieval fails.
         """
+        
         logging.info("Entered the get_bucket method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
 
         try:
@@ -50,21 +75,18 @@ class SimpleStorageService:
             raise USvisaException(e, sys) from e
 
 
-    # Done
+
     def is_s3_key_path_available(self, bucket_name, s3_key)->bool:
         
         """
-        Checks if a folder (key prefix) exists in an S3 bucket.
-    
-        Args:
-            bucket_name (str): AWS S3 bucket name
-            s3_key (str): Key prefix (folder path), e.g., 'models/'
-    
+        Check if a folder path (prefix) exists in an S3 bucket.
+
+        Parameters : 
+            (a) bucket_name (str): Name of the S3 bucket.
+            (b) s3_key (str): Folder prefix (e.g., 'models/').
+
         Returns:
-            bool: True if the prefix exists, False otherwise
-    
-        Raises:
-            Exception or USvisaException: If an error occurs
+            bool: True if exists, False otherwise.
         """
         
         try:
@@ -83,18 +105,15 @@ class SimpleStorageService:
             raise USvisaException(e,sys)
         
     
-    # Done
+   
     def create_folder(self, folder_name: str, bucket_name: str) -> None:
         
         """
-        Creates a "folder" in an S3 bucket by putting a zero-byte object with a trailing slash in its key.
-    
-        Args:
-            folder_name (str): Folder name (e.g., 'my_folder/')
-            bucket_name (str): Name of the S3 bucket
-    
-        Raises:
-            Exception or ClientError
+        Create a folder in an S3 bucket by uploading an empty object.
+
+        Parameters : 
+            (a) folder_name (str): The folder path (must end with '/').
+            (b) bucket_name (str): The bucket name.
         """
         
         logging.info("Entered the create_folder method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
@@ -122,19 +141,20 @@ class SimpleStorageService:
             
             logging.info("Exited the create_folder method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
 
-    # Done
+    
+    
     # For checking if file exists or not
     def is_s3_file_exists(self, bucket_name: str, s3_key: str) -> bool:
         
         """
-        Checks if a specific object (file) exists in the given S3 bucket.
-    
-        Args:
-            bucket_name (str): Name of the S3 bucket.
-            s3_key (str): Full S3 key (e.g., "ProductionModel/production_model.pkl")
-    
+        Check if a file exists in S3.
+
+        Parameters : 
+            (a) bucket_name (str): Bucket name.
+            (b) s3_key (str): Full object key.
+
         Returns:
-            bool: True if the object exists, False otherwise.
+            bool: True if exists, False otherwise.
         """
         
         try:
@@ -151,7 +171,7 @@ class SimpleStorageService:
             raise USvisaException(e,sys)
      
     
-    # Done
+  
     def upload_file(self,
                     from_filename: str,
                     s3_key: str,
@@ -161,19 +181,22 @@ class SimpleStorageService:
         """
         Uploads a file to an AWS S3 bucket.
     
-        Args:
-            from_filename (str): Local file path to upload.
+        Parameters : 
+            (a) from_filename (str): Local file path to upload.
             
-            s3_key (str): The S3 object key (path in the bucket).
+            (b) s3_key (str): The S3 object key (path in the bucket).
                           In AWS S3, the s3_key is the complete path including the file name — 
                           it uniquely identifies an object (file) in a bucket.
             
-            bucket_name (str): Target S3 bucket name.
-            remove (bool): Whether to delete the local file after upload. Defaults to False.
+            (c) bucket_name (str): Target S3 bucket name.
+            (d) remove (bool): Whether to delete the local file after upload. Defaults to False.
 
         """
         logging.info("Entered the upload_file method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
 
+        if not os.path.exists(from_filename):
+            raise USvisaException(f"File '{from_filename}' does not exist.", sys)
+        
         try:
             logging.info(
                 f"Uploading {from_filename} file to {s3_key} file in {bucket_name} bucket"
@@ -207,16 +230,16 @@ class SimpleStorageService:
             raise USvisaException(e, sys) from e
      
      
-    # Done
+
     def get_s3_fileobjects( self, filename: str, bucket_name: str) -> Union[List[object], object]:
         
         """
-        Method Name :   get_file_object
-        Description :   The method retrieves file objects from an AWS S3 bucket based on a prefix (like a folder name or partial filename).
+        The method retrieves file objects from an AWS S3 bucket based on a prefix 
+        (like a folder name or partial filename).
 
-                        It returns either:
-                            (a) A single object if only one match is found. 
-                            (b) A list of objects if multiple matches are found.
+        It returns either:
+            (a) A single object if only one match is found. 
+            (b) A list of objects if multiple matches are found.
 
         Output      :   list of objects or object is returned based on filename
         On Failure  :   Write an exception log and then raise an exception
@@ -246,20 +269,20 @@ class SimpleStorageService:
             raise USvisaException(e, sys) from e
 
 
-    # Done
+    
     def download_s3_fileobject_as_file(self, object_summaries, destination_dir: Path):
-    # def get_s3_object(self, object_summaries, destination_dir: Path):
         
         """
         Converts ObjectSummary(s) to actual S3 Object(s) and downloads the file(s) locally.
     
-        Args:
-            object_summaries (Union[List[s3.ObjectSummary], s3.ObjectSummary]): The ObjectSummary instance(s).
-            destination_dir (Path): Local directory where files will be downloaded and saved.
+        Parameters : 
+            (a) object_summaries (Union[List[s3.ObjectSummary], s3.ObjectSummary]): The ObjectSummary instance(s).
+            (b) destination_dir (Path): Local directory where files will be downloaded and saved.
         """
+        
         logging.info("Entered the download_s3_fileobject_as_file method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
+        
         # Ensure destination_dir is a directory and exists
-        #destination_dir.mkdir(parents=True, exist_ok=True)
         os.makedirs(destination_dir, exist_ok=True)
      
         # Make it a list if not already
@@ -284,18 +307,25 @@ class SimpleStorageService:
 
         logging.info("Exited the download_s3_fileobject_as_file method of SimpleStorageService class inside src/us_visa/cloud_storage/aws_storage.py file")
     
-    # Done
-    # def load_prod_model_from_local(self, filename local_s3_model_path:Path):
+  
+    
     def load_n_save_prod_model(self, 
                                s3_filename,
                                bucket_name, 
                                local_destination_dir:Path
                               ):
         """
-        This method loads the production model downloaded from the S3 bucket and later saved on local system.
-        
-        Returns :  Skleanr S3 model object
+        Download a production model from S3, save locally, and load into memory.
+
+        Parameters : 
+            (a) s3_filename (str): Model filename or key.
+            (b) bucket_name (str): Bucket containing the model.
+            (c) local_destination_dir (Path): Directory to save model.
+
+        Returns:
+            object: Loaded model, or None if not found.
         """
+        
         try: 
             file_objects = self.get_s3_fileobjects(filename=s3_filename, 
                                                    bucket_name=bucket_name)

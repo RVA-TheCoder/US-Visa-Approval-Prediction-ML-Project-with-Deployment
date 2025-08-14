@@ -6,11 +6,13 @@ url : https://www.kaggle.com/datasets/moro23/easyvisa-dataset
 
 ## Workflow:
 
-1. constants
-2. entity
-3. components
-4. pipeline
-5. Main file
+1. src/us_visa/constants
+2. src/us_visa/configuration
+2. src/us_visa/entity
+3. src/us_visa/components
+4. src/us_visa/pipeline
+5. main.py file
+6. app.py file
 
 
 # Export the environment variables : 

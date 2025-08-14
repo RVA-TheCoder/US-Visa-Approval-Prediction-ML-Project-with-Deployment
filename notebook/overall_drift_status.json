@@ -1,0 +1,6 @@
+{
+    "name": "Share of Drifted Columns: Less 0.500",
+    "description": "Share of Drifted Columns: Actual value 0.000 < 0.500",
+    "status": "SUCCESS",
+    "threshold": 0.5
+}

@@ -1,0 +1,13 @@
+feature,description,status
+no_of_employees,Drift score is 0.01. The drift detection method is Wasserstein distance (normed). The drift threshold is 0.10.,SUCCESS
+yr_of_estab,Drift score is 0.01. The drift detection method is Wasserstein distance (normed). The drift threshold is 0.10.,SUCCESS
+prevailing_wage,Drift score is 0.01. The drift detection method is Wasserstein distance (normed). The drift threshold is 0.10.,SUCCESS
+continent,Drift score is 0.01. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+education_of_employee,Drift score is 0.01. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+has_job_experience,Drift score is 0.00. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+requires_job_training,Drift score is 0.00. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+region_of_employment,Drift score is 0.01. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+unit_of_wage,Drift score is 0.01. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+full_time_position,Drift score is 0.00. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+case_status,Drift score is 0.00. The drift detection method is Jensen-Shannon distance. The drift threshold is 0.10.,SUCCESS
+case_id,Drift score is 0.50. The drift detection method is Absolute text content drift. The drift threshold is 0.55.,SUCCESS

@@ -1,3 +1,5 @@
+# YAML configuration file that defines metadata about our dataset's structure, 
+# used for guiding data preprocessing in a machine learning pipeline.
 columns:
   - case_id:category
   - continent:category
